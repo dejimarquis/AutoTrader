@@ -87,7 +87,7 @@ class MyStreamListener(tweepy.StreamListener):
         for stock in self.stock_list:
             sentimentScore = self.stock_sentiment_score_pair[stock]
             if sentimentScore > 0:
-                if sentimentScore > 0.66:
+                if sentimentScore > 0.5:
                     # buy
                     position = None
                     try:
