@@ -153,8 +153,12 @@ class MyStreamListener(tweepy.StreamListener):
                     stock + " " + side + " | completed.")
             except:
                 print("Order of | " + str(qty) + " " + stock +
-                    " " + side + " | did not go through. Retry....")
-                self.alpaca.submit_order(stock, qty, side, "market", "day")
+                    " " + side + " | did not go through. Retrying....")
+                try:
+                    self.alpaca.submit_order(stock, qty, side, "market", "day")
+                except Exception as e:
+                    print("Order of | " + str(qty) + " " + stock +
+                    " " + side + " | STILL did not go through. ...." + str(e))
         else:
             print("Quantity is 0, order of | " + str(qty) +
                 " " + stock + " " + side + " | not completed.")
