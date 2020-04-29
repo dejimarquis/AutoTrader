@@ -117,8 +117,8 @@ class MyStreamListener(tweepy.StreamListener):
                 print("selling " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))
                 stocks_to_sell.append(stock)
 
-        print("We are taking a long position in: " + str(stocks_to_sell))
-        print("We are taking a short position in: " + str(stocks_to_buy))
+        print("We are taking a short position in: " + str(stocks_to_sell))
+        print("We are taking a long position in: " + str(stocks_to_buy))
         return stocks_to_buy, stocks_to_sell
 
     def get_scores(self, document):
@@ -138,8 +138,8 @@ class MyStreamListener(tweepy.StreamListener):
         qty_to_buy = int(0.7 * equity // stocks_to_buy_price)
         qty_to_sell = int(0.3 * equity // stocks_to_sell_price)
 
-        self.sendBatchOrder(qty_to_buy, stocks_to_buy, "buy")
         self.sendBatchOrder(qty_to_sell, stocks_to_sell, "sell")
+        self.sendBatchOrder(qty_to_buy, stocks_to_buy, "buy")
 
     def sendBatchOrder(self, qty, stocks, side):
         for stock in stocks:
