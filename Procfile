@@ -1,1 +1,1 @@
-worker: python long-short-strategy.py
+worker: python ./SentimentalAnalysisStrategy/SentAnalysisOnStocks.py

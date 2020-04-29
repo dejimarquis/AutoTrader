@@ -4,11 +4,12 @@ import time
 import datetime
 import os
 from dotenv import load_dotenv
+from Stocks import Stocks
 
 load_dotenv()
 API_KEY = os.getenv('API_KEY')
 API_SECRET = os.getenv('API_SECRET')
-APCA_API_BASE_URL = os.getenv('AAPCA_API_BASE_URL')
+APCA_API_BASE_URL = os.getenv('APCA_API_BASE_URL')
 
 
 class LongShort:
@@ -16,8 +17,7 @@ class LongShort:
         self.alpaca = tradeapi.REST(
             API_KEY, API_SECRET, APCA_API_BASE_URL, 'v2')
 
-        stockUniverse = ['DOMO', 'TLRY', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
-                         'CGC', 'SPWR', 'NIO', 'CAT', 'MSFT', 'PANW', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+        stockUniverse = Stocks().get_stocks()
         # Format the allStocks variable for use in the class.
         self.allStocks = []
         for stock in stockUniverse:
