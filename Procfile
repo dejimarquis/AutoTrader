@@ -1,1 +1,1 @@
-worker: python ./SentimentalAnalysisStrategy/SentAnalysisOnStocks.py
+worker: python SentimentalAnalysisStrategy/SentAnalysisOnStocks.py

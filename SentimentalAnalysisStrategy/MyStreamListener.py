@@ -116,6 +116,9 @@ class MyStreamListener(tweepy.StreamListener):
                         continue
                 print("selling " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))
                 stocks_to_sell.append(stock)
+
+        print("We are taking a long position in: " + str(stocks_to_sell))
+        print("We are taking a short position in: " + str(stocks_to_buy))
         return stocks_to_buy, stocks_to_sell
 
     def get_scores(self, document):
