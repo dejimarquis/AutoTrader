@@ -85,37 +85,39 @@ class MyStreamListener(tweepy.StreamListener):
         stocks_to_sell = []
     
         for stock in self.stock_list:
-            if self.stock_sentiment_score_pair[stock] > 0.66:
-                # buy
-                position = None
-                try:
-                    postion = self.alpaca.get_position(stock)
-                except:
+            sentimentScore = self.stock_sentiment_score_pair[stock]
+            if sentimentScore > 0:
+                if sentimentScore > 0.66:
+                    # buy
                     position = None
+                    try:
+                        postion = self.alpaca.get_position(stock)
+                    except:
+                        position = None
 
-                if position:
-                    if position.side == "long":
-                        continue
-                    else:
-                        self.alpaca.close_position(stock)
+                    if position:
+                        if position.side == "long":
+                            continue
+                        else:
+                            self.alpaca.close_position(stock)
 
-                print("buying " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))        
-                stocks_to_buy.append(stock)
-            else:
-                # sell
-                position = None
-                try:
-                    postion = self.alpaca.get_position(stock)
-                except:
+                    print("buying " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))        
+                    stocks_to_buy.append(stock)
+                else:
+                    # sell
                     position = None
+                    try:
+                        postion = self.alpaca.get_position(stock)
+                    except:
+                        position = None
 
-                if position:
-                    if position.side == "long": 
-                        self.alpaca.close_position(stock)
-                    else:
-                        continue
-                print("selling " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))
-                stocks_to_sell.append(stock)
+                    if position:
+                        if position.side == "long": 
+                            self.alpaca.close_position(stock)
+                        else:
+                            continue
+                    print("selling " + stock + ": " + str(self.stock_sentiment_score_pair[stock]))
+                    stocks_to_sell.append(stock)
 
         print("We are taking a short position in: " + str(stocks_to_sell))
         print("We are taking a long position in: " + str(stocks_to_buy))

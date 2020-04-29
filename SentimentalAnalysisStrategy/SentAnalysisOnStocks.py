@@ -38,6 +38,7 @@ class SentAnalysisOnStocks:
 
     def run(self):
         self.awaitMarketOpen()
+        self.alpaca.close_all_positions()
         self.get_tweets_and_perform_sent_analysis()
 
     def awaitMarketOpen(self):
