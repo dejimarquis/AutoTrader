@@ -70,4 +70,4 @@ class Market:
         return timeToClose
 
     def aboutToClose(self):
-        return self.timeToClose < (60 * 15)
+        return self.timeToClose() < (60 * 15)
