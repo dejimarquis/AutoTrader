@@ -29,7 +29,7 @@ class SentAnalysisStrategy:
 
     def run(self):
         self.Market.awaitMarketOpen()
-        self.Account.closeAllPositions()
+        self.Account.closeAllOrders()
         self.get_tweets_and_perform_sent_analysis()
 
     def get_tweets_and_perform_sent_analysis(self):
