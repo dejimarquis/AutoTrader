@@ -126,6 +126,6 @@ class MyStreamListener(tweepy.StreamListener):
 
         equity = self.Account.getEquity()
         qty_to_sell = int(0.3 * equity // stocks_to_sell_price) if stocks_to_sell_price > 0 else 0
-        qty_to_buy = int(0.7 * equity // stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
+        qty_to_buy = int(1.3 * equity // stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
 
         return qty_to_sell, qty_to_buy
