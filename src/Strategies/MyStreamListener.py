@@ -33,7 +33,7 @@ class MyStreamListener(tweepy.StreamListener):
             print("Sleeping until market close (15 minutes).")
             time.sleep(60 * 15)
 
-        if self.totalTweetsParsed % 200 == 0:
+        if self.totalTweetsParsed > 0 and self.totalTweetsParsed % 200 == 0:
             self.process_sentiment_on_list(self.stock_list_of_tweets_pair)
             stocks_to_sell, stocks_to_buy = self.rebalance_stocks()
             qtySell, qtyBuy = self.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
