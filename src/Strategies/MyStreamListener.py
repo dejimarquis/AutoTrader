@@ -88,7 +88,7 @@ class MyStreamListener(tweepy.StreamListener):
                     position = None
                     try:
                         postion = self.Account.getPosition(stock)
-                    except:
+                    except Exception as e:
                         print(stock + " " + str(e))
                         position = None
 
