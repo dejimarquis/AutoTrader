@@ -8,9 +8,7 @@ from .Helpers.Market import Market
 from .Helpers.Account import Account
 
 class SentAnalysisStrategy:
-    def __init__(self, tradingApi, request_limit=20):
-
-        self.request_limit = request_limit
+    def __init__(self, tradingApi):
         self.api = ""
         self.twitter_keys = {
             'consumer_key': os.getenv('TWITTER_API_KEY'),
@@ -29,7 +27,7 @@ class SentAnalysisStrategy:
 
     def run(self):
         self.Market.awaitMarketOpen()
-        self.Account.closeAllPositions()
+        self.Account.closeAllOrders()
         self.get_tweets_and_perform_sent_analysis()
 
     def get_tweets_and_perform_sent_analysis(self):

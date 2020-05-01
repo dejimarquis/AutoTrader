@@ -95,6 +95,7 @@ class MyStreamListener(tweepy.StreamListener):
                         if position.side == "long":
                             continue
                         else:
+                            print("We have short position in " + stock + " already but we want to long, so closing current position")
                             self.Account.closePosition(stock)
 
                     print("buying " + stock + " with sentimental score: " + str(self.stock_sentiment_score_pair[stock]))        
@@ -109,6 +110,7 @@ class MyStreamListener(tweepy.StreamListener):
 
                     if position:
                         if position.side == "long": 
+                            print("We have long position in " + stock + " already but we want to short, so closing current position")
                             self.alpaca.close_position(stock)
                         else:
                             continue
