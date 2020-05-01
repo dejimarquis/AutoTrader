@@ -46,7 +46,7 @@ class MyStreamListener(tweepy.StreamListener):
             if self.Market.timeToClose() < 60 * 30:
                 time.sleep(60 * 10)
             else:
-                time.sleep(60 * 30)
+                time.sleep(60 * 15)
 
         for stock in self.stock_list:
             if stock in str(status.text):
