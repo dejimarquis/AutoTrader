@@ -89,6 +89,7 @@ class MyStreamListener(tweepy.StreamListener):
                     try:
                         postion = self.Account.getPosition(stock)
                     except:
+                        print(stock + " " + str(e))
                         position = None
 
                     if position:
@@ -104,14 +105,15 @@ class MyStreamListener(tweepy.StreamListener):
                     # sell
                     position = None
                     try:
-                        postion = self.alpaca.get_position(stock)
-                    except:
+                        postion = self.Account.getPosition(stock)
+                    except Exception as e:
+                        print(stock + " " + str(e))
                         position = None
 
                     if position:
                         if position.side == "long": 
                             print("We have long position in " + stock + " already but we want to short, so closing current position")
-                            self.alpaca.close_position(stock)
+                            self.Account.closePosition(stock)
                         else:
                             continue
 
@@ -126,7 +128,7 @@ class MyStreamListener(tweepy.StreamListener):
         stocks_to_sell_price = self.Market.getTotalPrice(stocks_to_sell)
         stocks_to_buy_price = self.Market.getTotalPrice(stocks_to_buy)
 
-        buyingPower = self.Account.getBuyingPower()
+        buyingPower = self.Account.getEquity()
         qty_to_sell = int(0.3 * buyingPower // stocks_to_sell_price) if stocks_to_sell_price > 0 else 0
         qty_to_buy = int(1.3 * buyingPower // stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
 
