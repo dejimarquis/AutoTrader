@@ -87,7 +87,7 @@ class MyStreamListener(tweepy.StreamListener):
                     # buy
                     position = None
                     try:
-                        postion = self.Account.getPosition(stock)
+                        position = self.Account.getPosition(stock)
                     except Exception as e:
                         print(stock + " " + str(e))
                         position = None
@@ -106,7 +106,7 @@ class MyStreamListener(tweepy.StreamListener):
                     # sell
                     position = None
                     try:
-                        postion = self.Account.getPosition(stock)
+                        position = self.Account.getPosition(stock)
                     except Exception as e:
                         print(stock + " " + str(e))
                         position = None
