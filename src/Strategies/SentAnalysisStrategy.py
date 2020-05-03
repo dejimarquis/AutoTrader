@@ -26,8 +26,8 @@ class SentAnalysisStrategy:
         self.api = tweepy.API(auth)
 
     def run(self):
-        self.Market.awaitMarketOpen()
-        self.Account.closeAllOrders()
+        # self.Market.awaitMarketOpen()
+        # self.Account.closeAllOrders()
         self.get_tweets_and_perform_sent_analysis()
 
     def get_tweets_and_perform_sent_analysis(self):
@@ -35,4 +35,4 @@ class SentAnalysisStrategy:
         myStream = tweepy.Stream(auth=self.api.auth, listener=myStreamListener)
         symbolList = ["$"+s for s in Stocks().getStocks()]
         myStream.filter(track= symbolList,
-                        languages=['en'], is_async=True)
+                        languages=['en'], is_async=True, follow='44196397')
