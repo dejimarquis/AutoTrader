@@ -26,10 +26,10 @@ account = api.get_account()
 # print(api.get_barset('AAPL', "1D", 1)) Day stats of APPL stock
 
 
-barTimeframe = "15Min"  # 1Min, 5Min, 15Min, 1H, 1D
-assetsToDownload = ["TSLA", "MSFT", "AAPL", "AMZN"]
+barTimeframe = "1Min"  # 1Min, 5Min, 15Min, 1H, 1D
+assetsToDownload = ["TSLA"]
 # Start date for the market data in ISO8601 format
-startDate = "2019-11-01T09:30:00-04:00"
+startDate = "2020-05-01T00:00:00-04:00"
 
 # Tracks position in list of symbols to download
 iteratorPos = 0
@@ -48,6 +48,7 @@ while iteratorPos < assetListLen:
 
     # Reads, formats and stores the new bars
     bars = returned_data[symbol]
+    print(bars)
     for bar in bars:
         timeList.append(bar.t)
         openList.append(bar.o)
@@ -65,7 +66,27 @@ while iteratorPos < assetListLen:
     volumeList = np.array(volumeList, dtype=np.float64)
 
     # Calculated trading indicators
-    SMA20 = talib.EMA(closeList, 20)
-    SMA50 = talib.EMA(closeList, 50)
+    SMA20 = talib.EMA(closeList, 10)
+    SMA50 = talib.EMA(closeList, 20)
 
-    print(SMA50[-1])
+    # Defines the plot for each trading symbol
+    f, ax = plt.subplots()
+    f.suptitle(symbol)
+
+    # Plots market data and indicators
+    ax.plot(timeList, closeList, label=symbol, color="black")
+    ax.plot(timeList, SMA20, label="EMA20", color="green")
+    ax.plot(timeList, SMA50, label="EMA50", color="red")
+
+    # Fills the green region if SMA20 > SMA50 and red if SMA20 < SMA50
+    ax.fill_between(timeList, SMA50, SMA20, where=SMA20 >=
+                    SMA50, facecolor='green', alpha=0.5, interpolate=True)
+    ax.fill_between(timeList, SMA50, SMA20, where=SMA20 <=
+                    SMA50, facecolor='red', alpha=0.5, interpolate=True)
+
+    # Adds the legend to the right of the chart
+    ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+
+    iteratorPos += 1
+
+plt.show()

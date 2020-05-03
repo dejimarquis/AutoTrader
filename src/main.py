@@ -1,4 +1,5 @@
 from Strategies.SentAnalysisStrategy import SentAnalysisStrategy
+from Strategies.MovingAverageStrategy import MovingAverageStrategy
 from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
 import os

@@ -17,6 +17,10 @@ class Market:
             totalPrice += self.getCurrentPrice(stock)
         return totalPrice
 
+    def getBarset(self, stocks, barTimeframe, start=None, end=None):
+        bars = self.api.get_barset(stocks, barTimeframe,start=start, end=end)
+        return bars
+
     def getMarketClock(self):
         return self.api.get_clock()
 

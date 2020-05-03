@@ -28,7 +28,7 @@ class Account:
     def getPosition(self, symbol):
         return self.api.get_position(symbol)
 
-    def closeAllOrders(self):
+    def cancelAllOrders(self):
         orders  = self.api.list_orders(status = "open")
         print("Closing all " + str(len(orders)) +  " open orders")
         for order in orders:
