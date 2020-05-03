@@ -1,1 +1,1 @@
-worker: python SampleTrader.py
+worker: python src/main.py
