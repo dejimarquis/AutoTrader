@@ -5,8 +5,8 @@ import alpaca_trade_api as tradeapi
 import os
 
 load_dotenv()
-API_KEY = os.getenv('API_KEY')
-API_SECRET = os.getenv('API_SECRET')
+API_KEY = os.getenv('APCA_API_KEY_ID')
+API_SECRET = os.getenv('APCA_API_SECRET_KEY')
 APCA_API_BASE_URL = os.getenv('APCA_API_BASE_URL')
 
 
