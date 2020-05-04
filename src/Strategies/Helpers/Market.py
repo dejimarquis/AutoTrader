@@ -6,6 +6,33 @@ class Market:
     def __init__(self, account):
         self.account = account
         self.api = account.api
+        self.stockUniverse = ['DOMO', 'TLRY', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
+                         'CGC', 'SPWR', 'NIO', 'CAT', 'MSFT', 'PANW', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+    
+    def getStocks(self):
+        return self.stockUniverse
+
+    def getStocksGivenBudget(self, budget):
+        return self.selectStocks(budget, len(self.stockUniverse) - 1, [])
+
+    def selectStocks(self, budget, index, selectedStocks):
+        if budget <= 0 or index < 0 or not self.stockUniverse:
+            return selectedStocks
+        if self.getCurrentPrice(self.stockUniverse[index]) > budget:
+            return self.selectStocks(budget, index, selectedStocks)
+
+        s0 = self.selectStocks(budget
+                                    , index - 1
+                                    , selectedStocks)
+        s1 = self.selectStocks(budget - self.getCurrentPrice(self.stockUniverse[index])
+                                    , index - 1
+                                    , selectedStocks.append(self.stockUniverse[index]))
+        x =  max(self.getTotalPrice(s0), self.getTotalPrice(s1))
+
+        if x == self.getTotalPrice(s0):
+            return s0
+        else:
+            return s1
 
     def getCurrentPrice(self, stock):
         bars = self.api.get_barset(stock, "minute", 1)

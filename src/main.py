@@ -12,8 +12,14 @@ APCA_API_BASE_URL = os.getenv('APCA_API_BASE_URL')
 
 def main():
     api = tradeapi.REST(API_KEY, API_SECRET, APCA_API_BASE_URL, 'v2')
-    strategy = SentAnalysisStrategy(tradingApi=api)
-    strategy.run()
+    try:
+        print("Running moving average strategy")
+        strategy = MovingAverageStrategy(tradingApi=api)
+        strategy.run()
+    except Exception as ex:
+        print(str(ex) +  "Moving average strategy failed, switch to sentimental ....")
+        strategy = SentAnalysisStrategy(tradingApi=api)
+        strategy.run()
 
 
 if __name__ == '__main__':
