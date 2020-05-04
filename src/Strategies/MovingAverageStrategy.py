@@ -1,6 +1,7 @@
 import pandas as pd
 import ta
 import datetime
+import time
 from pytz import timezone
 import numpy as np
 from .Helpers.Stocks import Stocks
