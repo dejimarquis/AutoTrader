@@ -107,7 +107,7 @@ class MovingAverageStrategy:
         stocks_to_buy_price = self.Market.getTotalPrice(stocks_to_buy)
 
         buyingPower = self.Account.getBuyingPower()
-        qty_to_sell = int(0.3 * buyingPower // 1.04 * stocks_to_sell_price) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
-        qty_to_buy = int(0.7 * buyingPower // 1.04 * stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
+        qty_to_sell = int((0.3 * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
+        qty_to_buy = int((0.7 * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
 
         return qty_to_sell, qty_to_buy
