@@ -56,8 +56,8 @@ class MovingAverageStrategy:
             timeList =  pd.Series(timeList)
             closeList = pd.Series(closeList, dtype=np.float64)
             volumeList = pd.Series(volumeList, dtype=np.float64)
-            EMA10 = ta.trend.EMAIndicator(closeList, 10).ema_indicator().values[-1] if ta.trend.EMAIndicator(closeList, 10).ema_indicator().values else 0
-            EMA20 = ta.trend.EMAIndicator(closeList, 20).ema_indicator().values[-1] if ta.trend.EMAIndicator(closeList, 20).ema_indicator().values else 0
+            EMA10 = ta.trend.EMAIndicator(closeList, 10).ema_indicator().values[-1] if any(ta.trend.EMAIndicator(closeList, 10).ema_indicator().values) else 0
+            EMA20 = ta.trend.EMAIndicator(closeList, 20).ema_indicator().values[-1] if any(ta.trend.EMAIndicator(closeList, 20).ema_indicator().values) else 0
 
             if EMA10 > EMA20:
                 # buy
