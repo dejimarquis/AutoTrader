@@ -56,8 +56,8 @@ class MovingAverageStrategy:
             timeList =  pd.Series(timeList)
             closeList = pd.Series(closeList, dtype=np.float64)
             volumeList = pd.Series(volumeList, dtype=np.float64)
-            EMA10 = ta.trend.EMAIndicator(closeList, 10).ema_indicator().values[-1]
-            EMA20 = ta.trend.EMAIndicator(closeList, 20).ema_indicator().values[-1]
+            EMA10 = ta.trend.EMAIndicator(closeList, 10).ema_indicator().values[-1] if ta.trend.EMAIndicator(closeList, 10).ema_indicator().values else 0
+            EMA20 = ta.trend.EMAIndicator(closeList, 20).ema_indicator().values[-1] if ta.trend.EMAIndicator(closeList, 20).ema_indicator().values else 0
 
             if EMA10 > EMA20:
                 # buy
@@ -106,8 +106,8 @@ class MovingAverageStrategy:
         stocks_to_sell_price = self.Market.getTotalPrice(stocks_to_sell)
         stocks_to_buy_price = self.Market.getTotalPrice(stocks_to_buy)
 
-        buyingPower = self.Account.getEquity()
-        qty_to_sell = int(0.3 * buyingPower // stocks_to_sell_price) if stocks_to_sell_price > 0 else 0
-        qty_to_buy = int(1.3 * buyingPower // stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
+        buyingPower = self.Account.getBuyingPower()
+        qty_to_sell = int(0.3 * buyingPower // 1.04 * stocks_to_sell_price) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
+        qty_to_buy = int(0.7 * buyingPower // 1.04 * stocks_to_buy_price) if stocks_to_buy_price > 0 else 0
 
         return qty_to_sell, qty_to_buy

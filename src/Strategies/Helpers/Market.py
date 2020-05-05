@@ -7,7 +7,9 @@ class Market:
         self.account = account
         self.api = account.api
         self.stockUniverse = ['DOMO', 'TLRY', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
-                         'CGC', 'SPWR', 'NIO', 'CAT', 'MSFT', 'PANW', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+                         'ROKU', 'SPWR', 'MRO', 'CAT', 'MSFT', 'PANW', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+        self.stock_price_pair = {}
+        self.setStockPricePair()
     
     def getStocks(self):
         return self.stockUniverse
@@ -18,13 +20,13 @@ class Market:
     def selectStocks(self, budget, index, selectedStocks):
         if budget <= 0 or index < 0 or not self.stockUniverse:
             return selectedStocks
-        if self.getCurrentPrice(self.stockUniverse[index]) > budget:
+        if self.stock_price_pair[self.stockUniverse[index]] > budget:
             return self.selectStocks(budget, index, selectedStocks)
 
         s0 = self.selectStocks(budget
                                     , index - 1
                                     , selectedStocks)
-        s1 = self.selectStocks(budget - self.getCurrentPrice(self.stockUniverse[index])
+        s1 = self.selectStocks(budget - self.stock_price_pair[self.stockUniverse[index]]
                                     , index - 1
                                     , selectedStocks.append(self.stockUniverse[index]))
         x =  max(self.getTotalPrice(s0), self.getTotalPrice(s1))
@@ -33,6 +35,10 @@ class Market:
             return s0
         else:
             return s1
+
+    def setStockPricePair(self):
+        for stock in self.stockUniverse:
+            self.stock_price_pair.update({stock: self.getCurrentPrice(stock)})
 
     def getCurrentPrice(self, stock):
         bars = self.api.get_barset(stock, "minute", 1)
