@@ -11,7 +11,7 @@ from .Helpers.Account import Account
 class RsiStrategy:
     def __init__(self, tradingApi):
         eastern = timezone('US/Eastern')
-        today = datetime.datetime.now() + + datetime.timedelta(days=-1)
+        today = datetime.datetime.now()
         daystart = eastern.normalize(datetime.datetime(year=today.year, month=today.month,
                             day=today.day, hour=0, second=0, tzinfo=eastern))
 
