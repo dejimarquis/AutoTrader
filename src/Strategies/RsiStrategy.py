@@ -26,13 +26,13 @@ class RsiStrategy:
         self.Market.awaitMarketOpen()
         self.Account.cancelAllOrders()
 
-        while(not self.Market.aboutToClose()):
+        while(self.Market.isMarketOpen()):
             stocks_to_sell, stocks_to_buy = self.strategy()
             qtySell, qtyBuy = self.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
             self.Market.submitBatchOrder(qtySell, stocks_to_sell, "sell")
             self.Market.submitBatchOrder(qtyBuy, stocks_to_buy, "buy")
 
-        print("Market closing soon.  Closing positions.")
+        print("Market is closed")
         print("Sleeping until market close (15 minutes).")
         time.sleep(60 * 15)
 
@@ -57,44 +57,42 @@ class RsiStrategy:
 
             rsis = ta.momentum.RSIIndicator(closeList, 10).rsi().values if any(ta.momentum.RSIIndicator(closeList, 10).rsi().values) else None
 
-            if any(rsis) and rsis[-2] < 30 and 30 < rsis[-1]: #oversold
-                # buy
+            if any(rsis):
                 position = None
                 try:
                     position = self.Account.getPosition(stock)
                 except Exception as e:
                     print(stock + " " + str(e))
-                    position = None
-
-                if position:
-                    if position.side == "long":
-                        print("We already have a long position in "+ stock + ", so skip")
-                        continue
-                    else:
-                        print("We have short position in " + stock + " already but we want to long, so closing current position")
-                        self.Account.closePosition(stock)
-
-                print("buying " + stock + " with rsi: " + str(rsis[-1]))        
-                stocks_to_buy.append(stock)
-            elif any(rsis) and rsis[-2] > 70 and 70 > rsis[-1]: #overbought
-                # sell
                 position = None
-                try:
-                    position = self.Account.getPosition(stock)
-                except Exception as e:
-                    print(stock + " " + str(e))
-                    position = None
 
-                if position:
-                    if position.side == "long": 
-                        print("We have long position in " + stock + " already but we want to short, so closing current position")
-                        self.Account.closePosition(stock)
-                    else:
-                        print("We already have a short position in "+ stock + ", so skip")
-                        continue
+                if rsis[-2] < 30 and 30 < rsis[-1]: #oversold
+                    if position:
+                        if position.side == "long":
+                            print("We already have a long position in "+ stock + ", so skip")
+                            continue
+                        else:
+                            print("We have short position in " + stock + " already but we want to long, so closing current position")
+                            self.Account.closePosition(stock)
 
-                print("selling " + stock + "  with rsi: " + str(rsis[-1]))
-                stocks_to_sell.append(stock)
+                    print("Entering long position with  " + stock + " with RSI: " + str(rsis[-1]))        
+                    stocks_to_buy.append(stock)
+                elif rsis[-2] > 70 and 70 > rsis[-1]: #overbought
+                    if position:
+                        if position.side == "long": 
+                            print("We have long position in " + stock + " already but we want to short, so closing current position")
+                            self.Account.closePosition(stock)
+                        else:
+                            print("We already have a short position in "+ stock + ", so skip")
+                            continue
+
+                    print("Entering short position with  " + stock + "  with RSI: " + str(rsis[-1]))
+                    stocks_to_sell.append(stock)
+                elif position and position.side == "short" and rsis[-1] < 40: 
+                    print("Exiting short position with RSI: " + str(rsis[-1]))
+                    self.Account.closePosition(stock)                
+                elif position and position.side == "long" and rsis[-1] > 60:
+                    print("Exiting long positionw ith RSI: " + str(rsis[-1]))
+                    self.Account.closePosition(stock)
 
         print("We are taking a short position in: " + str(stocks_to_sell))
         print("We are taking a long position in: " + str(stocks_to_buy))

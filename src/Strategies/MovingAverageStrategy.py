@@ -25,6 +25,7 @@ class MovingAverageStrategy:
     def run(self):
         self.Market.awaitMarketOpen()
         self.Account.cancelAllOrders()
+        time.sleep(60 * 30) # This strategy needs the market to settle
 
         while(not self.Market.aboutToClose()):
             stocks_to_sell, stocks_to_buy = self.strategy()
