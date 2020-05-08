@@ -60,8 +60,13 @@ class RsiStrategy:
             rsis = ta.momentum.RSIIndicator(closeList, 10).rsi().values if any(ta.momentum.RSIIndicator(closeList, 10).rsi().values) else None
 
             if any(rsis):
-                v = [x for x in positions if x.symbol == stock]
-                position = v[0] if any(v) else None
+                position = None
+                try:
+                    v = [x for x in positions if x.symbol == stock]
+                    position = v[0] if any(v) else None
+                except Exception as e:
+                    print(stock + print(e))
+                    position = None
 
                 if rsis[-2] < 30 and 30 < rsis[-1]: #oversold
                     if position:
@@ -86,10 +91,10 @@ class RsiStrategy:
                     print("Entering short position with  " + stock + "  with RSI: " + str(rsis[-1]))
                     stocks_to_sell.append(stock)
                 elif position and position.side == "short" and rsis[-1] < 40: 
-                    print("Exiting short position with RSI: " + str(rsis[-1]))
+                    print("Exiting short position with  " + stock + " with RSI: " + str(rsis[-1]))
                     self.Account.closePosition(stock)                
                 elif position and position.side == "long" and rsis[-1] > 60:
-                    print("Exiting long positionw ith RSI: " + str(rsis[-1]))
+                    print("Exiting long position with  " + stock + " with RSI: " + str(rsis[-1]))
                     self.Account.closePosition(stock)
 
         print("We are taking a short position in: " + str(stocks_to_sell))
