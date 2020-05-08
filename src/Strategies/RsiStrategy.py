@@ -31,6 +31,7 @@ class RsiStrategy:
             qtySell, qtyBuy = self.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
             self.Market.submitBatchOrder(qtySell, stocks_to_sell, "sell")
             self.Market.submitBatchOrder(qtyBuy, stocks_to_buy, "buy")
+            time.sleep(20)
 
         print("Market is closed")
         print("Sleeping until market close (15 minutes).")
@@ -40,6 +41,7 @@ class RsiStrategy:
         stocks_to_sell = []
         stocks_to_buy = []
         barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, self.startDate, self.endDate)
+        positions = self.Account.getPositions()
         for stock in self.stock_list:
             timeList = []
             closeList = []
@@ -58,12 +60,8 @@ class RsiStrategy:
             rsis = ta.momentum.RSIIndicator(closeList, 10).rsi().values if any(ta.momentum.RSIIndicator(closeList, 10).rsi().values) else None
 
             if any(rsis):
-                position = None
-                try:
-                    position = self.Account.getPosition(stock)
-                except Exception as e:
-                    print(stock + " " + str(e))
-                position = None
+                v = [x for x in positions if x.symbol == stock]
+                position = v[0] if any(v) else None
 
                 if rsis[-2] < 30 and 30 < rsis[-1]: #oversold
                     if position:
