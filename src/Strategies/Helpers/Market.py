@@ -50,12 +50,22 @@ class Market:
             totalPrice += self.getCurrentPrice(stock)
         return totalPrice
 
-    def getBarset(self, stocks, barTimeframe, start=None, end=None):
-        bars = self.api.get_barset(stocks, barTimeframe,start=start, end=end)
+    def getBarset(self, stocks, barTimeframe, limit=480):
+        bars = self.api.get_barset(stocks, barTimeframe, limit=limit)
         return bars
 
     def getMarketClock(self):
         return self.api.get_clock()
+
+    def calculate_qty_to_buy_sell(self, stocks_to_sell, stocks_to_buy):
+        stocks_to_sell_price = self.getTotalPrice(stocks_to_sell)
+        stocks_to_buy_price = self.getTotalPrice(stocks_to_buy)
+
+        buyingPower = self.account.getBuyingPower()
+        qty_to_sell = int((0.1 * len(stocks_to_sell) * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
+        qty_to_buy = int((0.1 * len(stocks_to_buy) * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
+
+        return qty_to_sell, qty_to_buy
 
     def isMarketOpen(self):
         return self.getMarketClock().is_open
@@ -68,7 +78,7 @@ class Market:
         if(qty > 0):
             stop_loss = {'stop_price': self.getCurrentPrice(stock) * 0.9}
             try:
-                if side == 'buy'
+                if side == 'buy':
                     self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
                 elif side == 'sell':
                     self.api.submit_order(stock, qty, side, "market", "day")
@@ -78,7 +88,7 @@ class Market:
                 print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | did not go through. Retrying....")
                 try:
-                    if side == 'buy'
+                    if side == 'buy':
                         self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
                     elif side == 'sell':
                         self.api.submit_order(stock, qty, side, "market", "day")

@@ -28,7 +28,7 @@ class RsiStrategy:
 
         while(self.Market.isMarketOpen()):
             stocks_to_sell, stocks_to_buy = self.strategy()
-            qtySell, qtyBuy = self.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
+            qtySell, qtyBuy = self.Market.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
             self.Market.submitBatchOrder(qtySell, stocks_to_sell, "sell")
             self.Market.submitBatchOrder(qtyBuy, stocks_to_buy, "buy")
             time.sleep(20)
@@ -40,7 +40,7 @@ class RsiStrategy:
     def strategy(self):
         stocks_to_sell = []
         stocks_to_buy = []
-        barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, self.startDate, self.endDate)
+        barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe)
         positions = self.Account.getPositions()
         for stock in self.stock_list:
             timeList = []
@@ -100,13 +100,3 @@ class RsiStrategy:
         print("We are taking a short position in: " + str(stocks_to_sell))
         print("We are taking a long position in: " + str(stocks_to_buy))
         return stocks_to_sell, stocks_to_buy
-
-    def calculate_qty_to_buy_sell(self, stocks_to_sell, stocks_to_buy):
-        stocks_to_sell_price = self.Market.getTotalPrice(stocks_to_sell)
-        stocks_to_buy_price = self.Market.getTotalPrice(stocks_to_buy)
-
-        buyingPower = self.Account.getBuyingPower()
-        qty_to_sell = int((0.1 * len(stocks_to_sell) * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
-        qty_to_buy = int((0.1 * len(stocks_to_buy) * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
-
-        return qty_to_sell, qty_to_buy

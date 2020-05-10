@@ -8,7 +8,7 @@ from .Helpers.Stocks import Stocks
 from .Helpers.Market import Market
 from .Helpers.Account import Account
 
-class MovingAverageStrategy:
+class GapStrategy:
     def __init__(self, tradingApi):
         eastern = timezone('US/Eastern')
         today = datetime.datetime.now()
@@ -17,7 +17,7 @@ class MovingAverageStrategy:
 
         self.Account = Account(tradingApi)
         self.Market = Market(self.Account)
-        self.stock_list = self.Market.getStocks()
+        self.stock_list = self.Account.getStocksFromWatchList()
         self.barTimeframe = "1Min"  # 1Min, 5Min, 15Min, 1H, 1D
         self.startDate = str(daystart.isoformat())
         self.endDate = str((daystart + datetime.timedelta(days=1)).isoformat())
@@ -25,7 +25,11 @@ class MovingAverageStrategy:
     def run(self):
         self.Market.awaitMarketOpen()
         self.Account.cancelAllOrders()
-        time.sleep(60 * 30) # This strategy needs the market to settle
+
+        # Buys all the top pre-market gaining stocks when the market opens
+        qtySell, qtyBuy = self.Market.calculate_qty_to_buy_sell([], self.stock_list)
+        self.Market.submitBatchOrder(qtyBuy, self.stock_list, "buy")
+        time.sleep(20)
 
         while(not self.Market.aboutToClose()):
             stocks_to_sell, stocks_to_buy = self.strategy()
@@ -43,6 +47,7 @@ class MovingAverageStrategy:
         stocks_to_sell = []
         stocks_to_buy = []
         barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe)
+        positions = self.Account.getPositions()
         for stock in self.stock_list:
             timeList = []
             closeList = []
@@ -60,15 +65,16 @@ class MovingAverageStrategy:
             EMA10 = ta.trend.EMAIndicator(closeList, 10).ema_indicator().values[-1] if any(ta.trend.EMAIndicator(closeList, 10).ema_indicator().values) else 0
             EMA20 = ta.trend.EMAIndicator(closeList, 20).ema_indicator().values[-1] if any(ta.trend.EMAIndicator(closeList, 20).ema_indicator().values) else 0
 
+            position = None
+            try:
+                v = [x for x in positions if x.symbol == stock]
+                position = v[0] if any(v) else None
+            except Exception as e:
+                print(stock + print(e))
+                position = None
+
             if EMA10 > EMA20:
                 # buy
-                position = None
-                try:
-                    position = self.Account.getPosition(stock)
-                except Exception as e:
-                    print(stock + " " + str(e))
-                    position = None
-
                 if position:
                     if position.side == "long":
                         print("We already have a long position in "+ stock + ", so skip")
@@ -81,13 +87,6 @@ class MovingAverageStrategy:
                 stocks_to_buy.append(stock)
             else:
                 # sell
-                position = None
-                try:
-                    position = self.Account.getPosition(stock)
-                except Exception as e:
-                    print(stock + " " + str(e))
-                    position = None
-
                 if position:
                     if position.side == "long": 
                         print("We have long position in " + stock + " already but we want to short, so closing current position")

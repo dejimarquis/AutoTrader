@@ -28,7 +28,7 @@ class Account:
     def getWatchlistById(self, id='b5c1c3ef-a3ca-4e07-9e38-73fa71bd8c6e'):
         return self.api.get_watchlist(id)
 
-    def getStocks(self):
+    def getStocksFromWatchList(self):
         assets = self.getWatchlistById().assets
         stocks = []
         for asset in assets:
@@ -43,7 +43,7 @@ class Account:
 
     def cancelAllOrders(self):
         orders  = self.api.list_orders(status = "open")
-        print("Closing all " + str(len(orders)) +  " open orders")
+        print("Cancelling all " + str(len(orders)) +  " open orders")
         for order in orders:
             self.api.cancel_order(order.id)
 
