@@ -66,15 +66,22 @@ class Market:
 
     def submitOrder(self, qty, stock, side):
         if(qty > 0):
+            stop_loss = {'stop_price': self.getCurrentPrice(stock) * 0.9}
             try:
-                self.api.submit_order(stock, qty, side, "market", "day")
+                if side == 'buy'
+                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
+                elif side == 'sell':
+                    self.api.submit_order(stock, qty, side, "market", "day")
                 print("Market order of | " + str(qty) + " " +
                     stock + " " + side + " | completed.")
             except:
                 print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | did not go through. Retrying....")
                 try:
-                    self.api.submit_order(stock, qty, side, "market", "day")
+                    if side == 'buy'
+                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
+                    elif side == 'sell':
+                        self.api.submit_order(stock, qty, side, "market", "day")
                 except Exception as e:
                     print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | STILL did not go through. ...." + str(e))

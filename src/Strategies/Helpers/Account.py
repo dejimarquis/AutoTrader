@@ -22,6 +22,19 @@ class Account:
     def getOrders(self):
         return self.api.list_orders()
 
+    def getWatchlists(self):
+        return self.api.get_watchlists()    
+    
+    def getWatchlistById(self, id='b5c1c3ef-a3ca-4e07-9e38-73fa71bd8c6e'):
+        return self.api.get_watchlist(id)
+
+    def getStocks(self):
+        assets = self.getWatchlistById().assets
+        stocks = []
+        for asset in assets:
+            stocks.append(asset['symbol'])
+        return stocks
+            
     def getPositions(self):
         return self.api.list_positions()
 

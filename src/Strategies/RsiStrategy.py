@@ -89,7 +89,7 @@ class RsiStrategy:
                     print("Exiting short position with RSI: " + str(rsis[-1]))
                     self.Account.closePosition(stock)                
                 elif position and position.side == "long" and rsis[-1] > 60:
-                    print("Exiting long positionw ith RSI: " + str(rsis[-1]))
+                    print("Exiting long position with RSI: " + str(rsis[-1]))
                     self.Account.closePosition(stock)
 
         print("We are taking a short position in: " + str(stocks_to_sell))
@@ -101,7 +101,7 @@ class RsiStrategy:
         stocks_to_buy_price = self.Market.getTotalPrice(stocks_to_buy)
 
         buyingPower = self.Account.getBuyingPower()
-        qty_to_sell = int((0.5 * 0.2 * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
-        qty_to_buy = int((0.5 * 0.2 * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
+        qty_to_sell = int((0.1 * len(stocks_to_sell) * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
+        qty_to_buy = int((0.1 * len(stocks_to_buy) * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
 
         return qty_to_sell, qty_to_buy
