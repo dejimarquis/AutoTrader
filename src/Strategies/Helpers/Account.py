@@ -25,7 +25,7 @@ class Account:
     def getWatchlists(self):
         return self.api.get_watchlists()    
     
-    def getWatchlistById(self, id='231f4c56-a0ab-4306-87d0-bda4e0c9bc00):
+    def getWatchlistById(self, id='231f4c56-a0ab-4306-87d0-bda4e0c9bc00'):
         return self.api.get_watchlist(id)
 
     def getStocksFromWatchList(self):
