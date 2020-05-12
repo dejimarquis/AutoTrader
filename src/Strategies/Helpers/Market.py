@@ -61,9 +61,9 @@ class Market:
         stocks_to_sell_price = self.getTotalPrice(stocks_to_sell)
         stocks_to_buy_price = self.getTotalPrice(stocks_to_buy)
 
-        buyingPower = self.account.getBuyingPower()
-        qty_to_sell = int((0.1 * len(stocks_to_sell) * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 else 0 # 1.04 to account for fees
-        qty_to_buy = int((0.1 * len(stocks_to_buy) * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 else 0
+        buyingPower = 103000 - self.account.getBuyingPower()
+        qty_to_sell = int((0.1 * len(stocks_to_sell) * buyingPower) // (1.04 * stocks_to_sell_price)) if stocks_to_sell_price > 0 and (0.1 * len(stocks_to_sell) * buyingPower > 0 else 0 # 1.04 to account for fees
+        qty_to_buy = int((0.1 * len(stocks_to_buy) * buyingPower) // (1.04 * stocks_to_buy_price)) if stocks_to_buy_price > 0 and (0.1 * len(stocks_to_buy) * buyingPower > 0 else 0
 
         return qty_to_sell, qty_to_buy
 
