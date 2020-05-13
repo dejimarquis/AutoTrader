@@ -14,8 +14,8 @@ APCA_API_BASE_URL = os.getenv('APCA_API_BASE_URL')
 
 def main():
     api = tradeapi.REST(API_KEY, API_SECRET, APCA_API_BASE_URL, 'v2')
-    print("Running Sentimental strategy")
-    strategy = SentAnalysisStrategy(tradingApi=api)
+    print("Running RSI strategy")
+    strategy = RsiStrategy(tradingApi=api)
     strategy.run()
 
 
