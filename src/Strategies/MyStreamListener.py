@@ -28,8 +28,8 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         if self.Market.aboutToClose():
-            print("Market closing soon.  Closing positions.")
-            self.Account.closeAllPositions()
+            print("Market closing soon.")
+            # self.Account.closeAllPositions()
             print("Sleeping until market close (15 minutes).")
             time.sleep(60 * 15)
 
