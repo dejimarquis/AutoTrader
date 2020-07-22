@@ -6,8 +6,8 @@ class Market:
     def __init__(self, account):
         self.account = account
         self.api = account.api
-        self.stockUniverse = ['DOMO', 'TLRY', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
-                         'ROKU', 'SPWR', 'MRO', 'CAT', 'MSFT', 'PANW', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+        self.stockUniverse = ['NFLX', 'NVDA', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
+                         'ROKU', 'SPWR', 'NIO', 'CAT', 'MSFT', 'MRNA', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
         self.stock_price_pair = {}
         self.setStockPricePair()
     
