@@ -67,6 +67,15 @@ class Market:
 
         return qty_to_sell, qty_to_buy
 
+    def calculate_qty_to_buy(self, buyingPower, stocks_to_buy):
+        amt_to_spend_per_stock = buyingPower/len(stocks_to_buy)
+        stock_qty_pair = {}
+
+        for stock in stocks_to_buy:
+            stock_qty_pair.update({stock: amt_to_spend_per_stock // self.getCurrentPrice(stock)})
+
+        return stock_qty_pair
+
     def isMarketOpen(self):
         return self.getMarketClock().is_open
 
