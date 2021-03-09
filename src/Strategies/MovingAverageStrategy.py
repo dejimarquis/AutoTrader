@@ -18,7 +18,7 @@ class MovingAverageStrategy:
         self.Account = Account(tradingApi)
         self.Market = Market(self.Account)
         self.stock_list = self.Market.getStocks()
-        self.barTimeframe = "1Min"  # 1Min, 5Min, 15Min, 1H, 1D
+        self.barTimeframe = "5Min"  # 1Min, 5Min, 15Min, 1H, 1D
         self.startDate = str(daystart.isoformat())
         self.endDate = str((daystart + datetime.timedelta(days=1)).isoformat())
 
@@ -32,7 +32,7 @@ class MovingAverageStrategy:
             qtySell, qtyBuy = self.Market.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
             self.Market.submitBatchOrder(qtySell, stocks_to_sell, "sell")
             self.Market.submitBatchOrder(qtyBuy, stocks_to_buy, "buy")
-            time.sleep(20)
+            time.sleep(60 * 15)
 
         print("Market closing soon.  Closing positions.")
         self.Account.closeAllPositions()
