@@ -16,7 +16,7 @@ class IntradayStrategy:
         self.strategy()
 
     def strategy(self):
-        time.sleep(15*60)
+        time.sleep(16*60)
         barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, 1)
         time.sleep(60)
 
