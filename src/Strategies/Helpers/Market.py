@@ -6,8 +6,8 @@ class Market:
     def __init__(self, account):
         self.account = account
         self.api = account.api
-        self.stockUniverse = ['NFLX', 'NVDA', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'SUI', 'SUN', 'TSLA',
-                         'ROKU', 'SPWR', 'NIO', 'CAT', 'MSFT', 'MRNA', 'OKTA', 'TWTR', 'TM', 'TDOC', 'ATVI', 'GS', 'BAC', 'MS', 'TWLO', 'QCOM', ]
+        self.stockUniverse = ['NFLX', 'NVDA', 'SQ', 'MRO', 'AAPL', 'GM', 'SNAP', 'SHOP', 'SPLK', 'BA', 'AMZN', 'TSLA',
+                                'ROKU', 'RIOT', 'NIO', 'CAT', 'MSFT', 'MRNA', 'AMC', 'TWTR', 'MS', 'TWLO', 'QCOM', 'GME']
         self.stock_price_pair = {}
         self.setStockPricePair()
     
@@ -83,14 +83,13 @@ class Market:
         for stock in stocks:
                 self.submitOrder(qty,stock,side)
 
-    def submitOrder(self, qty, stock, side):
+    def submitOrder(self, qty, stock, side, stop_loss=None, take_profit=None):
         if(qty > 0):
-            stop_loss = {'stop_price': self.getCurrentPrice(stock) * 0.9}
             try:
                 if side == 'buy':
-                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
+                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
                 elif side == 'sell':
-                    self.api.submit_order(stock, qty, side, "market", "day")
+                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
                 print("Market order of | " + str(qty) + " " +
                     stock + " " + side + " | completed.")
             except:
@@ -98,9 +97,9 @@ class Market:
                     " " + side + " | did not go through. Retrying....")
                 try:
                     if side == 'buy':
-                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss)
+                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
                     elif side == 'sell':
-                        self.api.submit_order(stock, qty, side, "market", "day")
+                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
                 except Exception as e:
                     print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | STILL did not go through. ...." + str(e))

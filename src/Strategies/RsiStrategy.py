@@ -26,14 +26,15 @@ class RsiStrategy:
         self.Market.awaitMarketOpen()
         self.Account.cancelAllOrders()
 
-        while(self.Market.isMarketOpen()):
+        while(not self.Market.aboutToClose()):
             stocks_to_sell, stocks_to_buy = self.strategy()
             qtySell, qtyBuy = self.Market.calculate_qty_to_buy_sell(stocks_to_sell, stocks_to_buy)
             self.Market.submitBatchOrder(qtySell, stocks_to_sell, "sell")
             self.Market.submitBatchOrder(qtyBuy, stocks_to_buy, "buy")
             time.sleep(20)
 
-        print("Market is closed")
+        print("Market is closing soon")
+        self.Account.closeAllPositions()
         print("Sleeping until market close (15 minutes).")
         time.sleep(60 * 15)
 
