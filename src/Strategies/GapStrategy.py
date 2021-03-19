@@ -10,17 +10,10 @@ from .Helpers.Account import Account
 
 class GapStrategy:
     def __init__(self, tradingApi):
-        eastern = timezone('US/Eastern')
-        today = datetime.datetime.now()
-        daystart = eastern.normalize(datetime.datetime(year=today.year, month=today.month,
-                            day=today.day, hour=0, second=0, tzinfo=eastern))
-
         self.Account = Account(tradingApi)
         self.Market = Market(self.Account)
         self.stock_list = self.Account.getStocksFromWatchList()
         self.barTimeframe = "1Min"  # 1Min, 5Min, 15Min, 1H, 1D
-        self.startDate = str(daystart.isoformat())
-        self.endDate = str((daystart + datetime.timedelta(days=1)).isoformat())
 
     def run(self):
         self.Market.awaitMarketOpen()
@@ -70,7 +63,7 @@ class GapStrategy:
                 v = [x for x in positions if x.symbol == stock]
                 position = v[0] if any(v) else None
             except Exception as e:
-                print(stock + print(e))
+                print(str(stock) + " " + str(e))
                 position = None
 
             if EMA10 > EMA20:

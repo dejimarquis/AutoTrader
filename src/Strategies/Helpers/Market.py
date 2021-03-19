@@ -15,26 +15,7 @@ class Market:
         return self.stockUniverse
 
     def getStocksGivenBudget(self, budget):
-        return self.selectStocks(budget, len(self.stockUniverse) - 1, [])
-
-    def selectStocks(self, budget, index, selectedStocks):
-        if budget <= 0 or index < 0 or not self.stockUniverse:
-            return selectedStocks
-        if self.stock_price_pair[self.stockUniverse[index]] > budget:
-            return self.selectStocks(budget, index, selectedStocks)
-
-        s0 = self.selectStocks(budget
-                                    , index - 1
-                                    , selectedStocks)
-        s1 = self.selectStocks(budget - self.stock_price_pair[self.stockUniverse[index]]
-                                    , index - 1
-                                    , selectedStocks.append(self.stockUniverse[index]))
-        x =  max(self.getTotalPrice(s0), self.getTotalPrice(s1))
-
-        if x == self.getTotalPrice(s0):
-            return s0
-        else:
-            return s1
+        return self._selectStocks(budget, len(self.stockUniverse) - 1, [])
 
     def setStockPricePair(self):
         for stock in self.stockUniverse:
@@ -72,7 +53,7 @@ class Market:
         stock_qty_pair = {}
 
         for stock in stocks_to_buy:
-            stock_qty_pair.update({stock: amt_to_spend_per_stock // self.getCurrentPrice(stock)})
+            stock_qty_pair.update({stock: int(amt_to_spend_per_stock // (self.getCurrentPrice(stock) * 1.04))})
 
         return stock_qty_pair
 
@@ -133,3 +114,22 @@ class Market:
 
     def aboutToClose(self):
         return self.timeToClose() < (60 * 15)
+
+    def _selectStocks(self, budget, index, selectedStocks):
+        if budget <= 0 or index < 0 or not self.stockUniverse:
+            return selectedStocks
+        if self.stock_price_pair[self.stockUniverse[index]] > budget:
+            return self._selectStocks(budget, index, selectedStocks)
+
+        s0 = self._selectStocks(budget
+                                    , index - 1
+                                    , selectedStocks)
+        s1 = self._selectStocks(budget - self.stock_price_pair[self.stockUniverse[index]]
+                                    , index - 1
+                                    , selectedStocks.append(self.stockUniverse[index]))
+        x =  max(self.getTotalPrice(s0), self.getTotalPrice(s1))
+
+        if x == self.getTotalPrice(s0):
+            return s0
+        else:
+            return s1

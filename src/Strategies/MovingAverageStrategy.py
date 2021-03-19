@@ -66,7 +66,7 @@ class MovingAverageStrategy:
                 try:
                     position = self.Account.getPosition(stock)
                 except Exception as e:
-                    print(stock + " " + str(e))
+                    print(str(stock) + " " + str(e))
                     position = None
 
                 if position:
