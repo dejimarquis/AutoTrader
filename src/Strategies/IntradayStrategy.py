@@ -18,7 +18,7 @@ class IntradayStrategy:
     def strategy(self):
         time.sleep(16*60)
         barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, 1)
-        qty_to_buy = self.Market.calculate_qty_to_buy(self.Account.getBuyingPower(), self.stock_list)
+        qty_to_buy = self.Market.calculate_qty_to_buy(self.Account.getEquity(), self.stock_list)
         print("Amount of stocks to buy" + str(qty_to_buy))
         time.sleep(60)
 
