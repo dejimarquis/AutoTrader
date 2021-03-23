@@ -20,7 +20,6 @@ class IntradayStrategy:
         barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, 1)
         qty_to_buy = self.Market.calculate_qty_to_buy(self.Account.getEquity(), self.stock_list)
         print("Amount of stocks to buy" + str(qty_to_buy))
-        time.sleep(60)
 
         while not self.Market.aboutToClose():
             for stock in self.stock_list:
@@ -38,8 +37,6 @@ class IntradayStrategy:
                     self.Market.submitOrder(qty_to_buy[stock], stock, "sell", order_class="bracket", stop_loss=stop_loss, take_profit=take_profit)
                     self.stock_list.remove(stock)
                     break
-
-            time.sleep(30)
 
         print("Market closing soon.  Closing positions.")
         self.Account.closeAllPositions()
