@@ -64,23 +64,17 @@ class Market:
         for stock in stocks:
                 self.submitOrder(qty,stock,side)
 
-    def submitOrder(self, qty, stock, side, stop_loss=None, take_profit=None):
+    def submitOrder(self, qty, stock, side, order_class=None, stop_loss=None, take_profit=None):
         if(qty > 0):
             try:
-                if side == 'buy':
-                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
-                elif side == 'sell':
-                    self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
+                self.api.submit_order(symbol=stock, qty=qty, side=side, type="market", time_in_force="day", order_class=order_class, stop_loss=stop_loss, take_profit=take_profit)
                 print("Market order of | " + str(qty) + " " +
                     stock + " " + side + " | completed.")
             except:
                 print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | did not go through. Retrying....")
                 try:
-                    if side == 'buy':
-                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
-                    elif side == 'sell':
-                        self.api.submit_order(stock, qty, side, "market", "day", stop_loss=stop_loss, take_profit=take_profit)
+                    self.api.submit_order(symbol=stock, qty=qty, side=side, type="market", time_in_force="day", order_class=order_class, stop_loss=stop_loss, take_profit=take_profit)
                 except Exception as e:
                     print("Order of | " + str(qty) + " " + stock +
                     " " + side + " | STILL did not go through. ...." + str(e))
