@@ -1,14 +1,26 @@
 import time
+import datetime
+import pytz
+import pandas as pd
 from .Helpers.Stocks import Stocks
 from .Helpers.Market import Market
 from .Helpers.Account import Account
 
 class IntradayStrategy:
     def __init__(self, tradingApi):
+        TZ = 'America/New_York'
+        today = datetime.datetime.now(tz=pytz.timezone(TZ))
+        beg = datetime.datetime(year=today.year, month=today.month,
+                            day=today.day, hour=9, minute=30, second=0)
+        close = datetime.datetime(year=today.year, month=today.month,
+                            day=today.day, hour=9, minute=44, second=59)
+        
         self.Account = Account(tradingApi)
         self.Market = Market(self.Account)
         self.stock_list = self.Market.getStocks()
         self.barTimeframe = "15Min"  # 1Min, 5Min, 15Min, 1H, 1D
+        self.start = pd.Timestamp(beg, tz=TZ).isoformat()
+        self.end = pd.Timestamp(close, tz=TZ).isoformat()
 
     def run(self):
         self.Market.awaitMarketOpen()
@@ -16,10 +28,10 @@ class IntradayStrategy:
         self.strategy()
 
     def strategy(self):
-        time.sleep(16*60)
-        barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, 1)
+        time.sleep((15*60) + 5)
+
+        barsOfStocks = self.Market.getBarset(self.stock_list, self.barTimeframe, 1, self.start, self.end)
         qty_to_buy = self.Market.calculate_qty_to_buy(self.Account.getEquity(), self.stock_list)
-        print("Amount of stocks to buy" + str(qty_to_buy))
 
         while not self.Market.aboutToClose():
             for stock in self.stock_list:
