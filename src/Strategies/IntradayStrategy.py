@@ -35,22 +35,25 @@ class IntradayStrategy:
 
         while not self.Market.aboutToClose():
             for stock in self.stock_list:
-                stockCurrentPrice = self.Market.getCurrentPrice(stock)
+                try:
+                    position = self.Account.getPosition(stock)
+                    print("We have a " + str(position.side) + " position in this current stock so skip")
+                    continue
+                except Exception as e:
+                    print(str(stock) + " " + str(e))
 
+                stockCurrentPrice = self.Market.getCurrentPrice(stock)
                 if stockCurrentPrice > barsOfStocks[stock][0].h:
-                    stop_loss = {"stop_price": (barsOfStocks[stock][0].h + barsOfStocks[stock][0].l)/2}
+                    stop_loss = {"stop_price": barsOfStocks[stock][0].h}
                     take_profit = {"limit_price": stockCurrentPrice * 1.01}
                     self.Market.submitOrder(qty_to_buy[stock], stock, "buy", order_class="bracket", stop_loss=stop_loss, take_profit=take_profit)
-                    self.stock_list.remove(stock)
-                    break
+
                 elif stockCurrentPrice < barsOfStocks[stock][0].l:
-                    stop_loss = {"stop_price": (barsOfStocks[stock][0].h + barsOfStocks[stock][0].l)/2}
+                    stop_loss = {"stop_price": barsOfStocks[stock][0].l}
                     take_profit = {"limit_price": stockCurrentPrice * .99}
                     self.Market.submitOrder(qty_to_buy[stock], stock, "sell", order_class="bracket", stop_loss=stop_loss, take_profit=take_profit)
-                    self.stock_list.remove(stock)
-                    break
 
-            time.sleep(3)
+            time.sleep(10)
 
         print("Market closing soon.  Closing positions.")
         self.Account.closeAllPositions()
