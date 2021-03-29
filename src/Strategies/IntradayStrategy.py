@@ -37,10 +37,10 @@ class IntradayStrategy:
             for stock in self.stock_list:
                 try:
                     position = self.Account.getPosition(stock)
-                    print("We have a " + str(position.side) + " position in this current stock so skip")
+                    print("We have a " + str(position.side) + " position in " + stock+ " so skip")
                     continue
-                except Exception as e:
-                    print(str(stock) + " " + str(e))
+                except Exception:
+                    pass
 
                 stockCurrentPrice = self.Market.getCurrentPrice(stock)
                 if stockCurrentPrice > barsOfStocks[stock][0].h:
