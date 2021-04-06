@@ -51,7 +51,7 @@ class IntradayStrategy:
                     self.stock_list.remove(stock)
                     break
 
-            time.sleep(3)
+            time.sleep(8)
 
         print("Market closing soon.  Closing positions.")
         self.Account.closeAllPositions()
