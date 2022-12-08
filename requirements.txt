@@ -6,7 +6,7 @@ async-timeout==3.0.1
 asyncio-nats-client==0.10.0
 attrs==19.3.0
 autopep8==1.5.2
-certifi==2020.4.5.1
+certifi==2022.12.7
 chardet==3.0.4
 cycler==0.10.0
 Deprecated==1.2.9
